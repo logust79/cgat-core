@@ -317,6 +317,23 @@ def clone_file(infile, outfile):
     except OSError:
         pass
 
+def shadow_file(infile, outfile):
+    import time
+    '''move ```infile``` as ```outfile```, and
+    touch ```infile```.
+    This could be useful when one wants to skip
+    some steps in a pipeline.
+    Note that zapFile is not needed when shadowFile
+    is used
+    '''
+    if outfile != infile:
+        shutil.move(infile, outfile)
+        touch_file(infile)
+        # reset outfile's timestamp
+        time.sleep(1)
+        touch_file(outfile)
+    else:
+        raise ValueError('Panic: infile and outfile names cannot be the same')
 
 def val2list(val):
     '''ensure that val is a list.'''
